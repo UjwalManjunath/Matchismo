@@ -7,13 +7,40 @@
 //
 
 #import "CardGameViewController.h"
+#import "PlayingCardDeck.h"
+#import "cardMatching.h"
 
 @interface CardGameViewController ()
 @property (weak, nonatomic) IBOutlet UILabel *flipsLabel;
 @property (nonatomic) int flipCount;
+@property (strong, nonatomic) IBOutletCollection(UIButton) NSArray *cardButtons;
+
+@property(nonatomic,strong) cardMatching *game;
 @end
 
 @implementation CardGameViewController
+
+-(cardMatching *)game
+{
+    if(_game) _game = [[cardMatching alloc]initWithCardCount:[self.cardButtons count]
+                                                   usingDeck:[[PlayingCardDeck alloc]init]];
+    return _game;
+}
+
+
+
+-(void)setCardButtons:(NSArray *)cardButtons
+{
+    _cardButtons=cardButtons;
+    [self updateUI];
+
+    
+}
+
+-(void)updateUI
+{
+    
+}
 
 -(void)setFlipCount:(int)flipCount
 {
@@ -23,7 +50,8 @@
 
 - (IBAction)flipCard:(UIButton *)sender
 {
-    sender.selected = !sender.isSelected;
+    [self.game flipCardAtindex:[self.cardButtons indexOfObject:sender]];
+    [self updateUI];
     self.flipCount++;
     
 }
