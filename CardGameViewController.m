@@ -15,6 +15,7 @@
 @property (nonatomic) int flipCount;
 @property (strong, nonatomic) IBOutletCollection(UIButton) NSArray *cardButtons;
 
+@property (weak, nonatomic) IBOutlet UILabel *scoreLabel;
 @property(nonatomic,strong) cardMatching *game;
 @end
 
@@ -22,7 +23,7 @@
 
 -(cardMatching *)game
 {
-    if(_game) _game = [[cardMatching alloc]initWithCardCount:[self.cardButtons count]
+    if(!_game) _game = [[cardMatching alloc]initWithCardCount:[self.cardButtons count]
                                                    usingDeck:[[PlayingCardDeck alloc]init]];
     return _game;
 }
@@ -37,8 +38,19 @@
     
 }
 
--(void)updateUI
+-(void)updateUI    //keep UI in synch with the model
 {
+    for(UIButton *cardButton in self.cardButtons)
+    {
+        Card *card = [self.game cardAtIndex:[self.cardButtons indexOfObject:cardButton]];
+        [cardButton setTitle:card.contents forState:UIControlStateSelected];
+        [cardButton setTitle:card.contents forState:UIControlStateSelected|UIControlStateDisabled];
+        cardButton.selected = card.isFaceup;
+        cardButton.enabled = !card.isUnPlayable;
+        cardButton.alpha = (card.isUnPlayable ? 0.3 : 1.0);
+        
+    }
+    self.scoreLabel.text = [NSString stringWithFormat:@"Score: %d",self.game.score];
     
 }
 

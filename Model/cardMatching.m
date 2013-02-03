@@ -19,7 +19,7 @@
 @implementation cardMatching
 
 -(NSMutableArray *)cards{
-    if(_cards)
+    if(!_cards)
         _cards = [[NSMutableArray alloc]init];
     return _cards;
 }
