@@ -47,7 +47,7 @@
         UIImage *cardBackImage = [UIImage imageNamed:@"cardimage.jpg"];
         Card *card = [self.game cardAtIndex:[self.cardButtons indexOfObject:cardButton]];
          
-        cardButton.imageEdgeInsets = UIEdgeInsetsMake(0, 0, 0, 0);
+        cardButton.imageEdgeInsets = UIEdgeInsetsMake(3, 2, 3, 2);
        [cardButton setTitle:card.contents forState:UIControlStateSelected];
       
         
