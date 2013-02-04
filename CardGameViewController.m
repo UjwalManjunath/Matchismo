@@ -43,13 +43,22 @@
 {
     for(UIButton *cardButton in self.cardButtons)
     {
+       // UIImage *noimage ;
+        UIImage *cardBackImage = [UIImage imageNamed:@"cardimage.jpg"];
         Card *card = [self.game cardAtIndex:[self.cardButtons indexOfObject:cardButton]];
+         
+        cardButton.imageEdgeInsets = UIEdgeInsetsMake(0, 0, 0, 0);
+       [cardButton setTitle:card.contents forState:UIControlStateSelected];
+      
         
-        [cardButton setTitle:card.contents forState:UIControlStateSelected];
         [cardButton setTitle:card.contents forState:UIControlStateSelected|UIControlStateDisabled];
+
         cardButton.selected = card.isFaceup;
         cardButton.enabled = !card.isUnPlayable;
-        cardButton.alpha = (card.isUnPlayable ? 0.3 : 1.0);
+        cardButton.alpha = (card.isUnPlayable ? 0.3 : 1.0 );
+        if(cardButton.selected)
+            cardBackImage = nil;
+            [cardButton setImage:cardBackImage forState:UIControlStateNormal ];
         
     }
     self.scoreLabel.text = [NSString stringWithFormat:@"Score: %d",self.game.score];
