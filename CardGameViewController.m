@@ -14,6 +14,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *flipsLabel;
 @property (nonatomic) int flipCount;
 @property (strong, nonatomic) IBOutletCollection(UIButton) NSArray *cardButtons;
+@property (weak, nonatomic) IBOutlet UILabel *descLabel;
 
 @property (weak, nonatomic) IBOutlet UILabel *scoreLabel;
 @property(nonatomic,strong) cardMatching *game;
@@ -43,6 +44,7 @@
     for(UIButton *cardButton in self.cardButtons)
     {
         Card *card = [self.game cardAtIndex:[self.cardButtons indexOfObject:cardButton]];
+        
         [cardButton setTitle:card.contents forState:UIControlStateSelected];
         [cardButton setTitle:card.contents forState:UIControlStateSelected|UIControlStateDisabled];
         cardButton.selected = card.isFaceup;
@@ -62,9 +64,25 @@
 
 - (IBAction)flipCard:(UIButton *)sender
 {
-    [self.game flipCardAtindex:[self.cardButtons indexOfObject:sender]];
+    self.descLabel.text =[self.game flipCardAtindex:[self.cardButtons indexOfObject:sender]];
+   // Card *card = [self.game cardAtIndex:[self.cardButtons indexOfObject:sender] ];
+    /*if(card.isFaceup){
+        self.descLabel.text = [NSString stringWithFormat:@"You Flipped %@",card.contents];
+    }
+    else {
+        self.descLabel.text = @"You Unflipped Card";
+    }*/
+    
     [self updateUI];
     self.flipCount++;
+    
+}
+- (IBAction)dealAgain {
+    self.game =nil;
+    [self game];
+    [self updateUI];
+    self.flipCount =0;
+    self.descLabel.text =@"New Cards";
     
 }
 

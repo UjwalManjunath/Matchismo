@@ -47,13 +47,15 @@
     return self;
 }
 
--(void) flipCardAtindex:(NSUInteger)index
+-(NSString *) flipCardAtindex:(NSUInteger)index
 {
+    NSString *description;
     Card *card = [self cardAtIndex:index];
     if(card && !card.isUnPlayable)
     {
         if(!card.isFaceup)
         {
+            description = [NSString stringWithFormat:@"You Flipped %@, %d point penalty",card.contents,FLIP_COST];
             for(Card *otherCard in self.cards){
                 if(otherCard.isFaceup && !otherCard.isUnPlayable){
                     int matchScore = [card match:@[otherCard]];
@@ -61,18 +63,25 @@
                         card.unPlayable=YES;
                         otherCard.unPlayable=YES;
                         self.score += matchScore * MATCH_BONUS;
+                        description = [NSString stringWithFormat:@"Matched %@ & %@ for %d points",card.contents,otherCard.contents,matchScore*MATCH_BONUS];
                     }else{
                         otherCard.faceUp=NO;
                         self.score-=MISMATCH_PENALTY;
+                        description = [NSString stringWithFormat:@"%@ & %@ does not Match! %d point penalty",card.contents,otherCard.contents,MISMATCH_PENALTY];
                     }
                     break;
                 
                 }
             }
               self.score-=FLIP_COST;
+            
         }
+        else
+              description = @"You UnFlipped a Card";
     card.faceUp = !card.isFaceup ;
+      
     }
+    return description;
 }
 
 @end
