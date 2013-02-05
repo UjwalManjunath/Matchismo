@@ -13,16 +13,23 @@
 
 -(int)match:(NSArray *)otherCards
 {
+    int suitCount=0,rankCount=0;
     int score =0;
-    if(otherCards.count ==1){
-        PlayingCard *otherCard = [otherCards lastObject];
-        if([otherCard.suit isEqualToString:self.suit]){
-            score=1;
+           NSMutableArray *cardList = [otherCards copy];
+            for( PlayingCard *otherPlayingCard in cardList){
+                if([self.suit isEqualToString:otherPlayingCard.suit]){
+                    suitCount++;
+                }
+                if(self.rank == otherPlayingCard.rank ){
+                    rankCount++;
+                }
+             
+            }
+               score = suitCount * 1 + rankCount * 4;
+            
+            
         
-        }else if(otherCard.rank == self.rank){
-            score=4;
-        }
-    }
+    
     return score;
 }
 

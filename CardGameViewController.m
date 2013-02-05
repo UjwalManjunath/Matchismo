@@ -16,8 +16,10 @@
 @property (strong, nonatomic) IBOutletCollection(UIButton) NSArray *cardButtons;
 @property (weak, nonatomic) IBOutlet UILabel *descLabel;
 
+@property (strong, nonatomic) IBOutlet UISegmentedControl *gameMode;
 @property (weak, nonatomic) IBOutlet UILabel *scoreLabel;
 @property(nonatomic,strong) cardMatching *game;
+
 @end
 
 @implementation CardGameViewController
@@ -30,6 +32,13 @@
 }
 
 
+
+
+- (IBAction)gameModeChanged:(id)sender {
+    NSLog(@"%d", self.gameMode.selectedSegmentIndex);
+ // [self.gameMode titleForSegmentAtIndex:<#(NSUInteger)#>]
+    
+}
 
 -(void)setCardButtons:(NSArray *)cardButtons
 {
@@ -73,20 +82,17 @@
 
 - (IBAction)flipCard:(UIButton *)sender
 {
-    self.descLabel.text =[self.game flipCardAtindex:[self.cardButtons indexOfObject:sender]];
-   // Card *card = [self.game cardAtIndex:[self.cardButtons indexOfObject:sender] ];
-    /*if(card.isFaceup){
-        self.descLabel.text = [NSString stringWithFormat:@"You Flipped %@",card.contents];
-    }
-    else {
-        self.descLabel.text = @"You Unflipped Card";
-    }*/
-    
+    self.gameMode.userInteractionEnabled=NO;
+    self.gameMode.alpha=0.3;
+    self.descLabel.text =[self.game flipCardAtindex:[self.cardButtons indexOfObject:sender]usingmode:self.gameMode.selectedSegmentIndex];
     [self updateUI];
     self.flipCount++;
     
 }
-- (IBAction)dealAgain {
+- (IBAction)dealAgain
+{
+    self.gameMode.userInteractionEnabled=YES;
+    self.gameMode.alpha=1;
     self.game =nil;
     [self game];
     [self updateUI];

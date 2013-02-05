@@ -15,7 +15,8 @@
 //designated initializer
 -(id)initWithCardCount:(NSUInteger)count
              usingDeck:(Deck *)deck;
--(NSString *) flipCardAtindex:(NSUInteger)index ;
+-(NSString *) flipCardAtindex:(NSUInteger)index
+usingmode:(NSUInteger)gameMode;
 
 -(Card *) cardAtIndex:(NSUInteger)index ;
 
