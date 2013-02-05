@@ -19,16 +19,20 @@
             for( PlayingCard *otherPlayingCard in cardList){
                 if([self.suit isEqualToString:otherPlayingCard.suit]){
                     suitCount++;
+                 
                 }
-                if(self.rank == otherPlayingCard.rank ){
-                    rankCount++;
+               else if(self.rank == otherPlayingCard.rank ){
+                   rankCount++;
                 }
              
             }
-               score = suitCount * 1 + rankCount * 4;
+              
             
             
-        
+        if(suitCount == [cardList count] || rankCount == [cardList count])
+        {
+         score = suitCount * 1 + rankCount * 4;   
+        }
     
     return score;
 }
