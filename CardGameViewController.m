@@ -84,7 +84,7 @@
 {
     self.gameMode.userInteractionEnabled=NO;
     self.gameMode.alpha=0.3;
-    self.descLabel.text =[self.game flipCardAtindex:[self.cardButtons indexOfObject:sender]usingmode:self.gameMode.selectedSegmentIndex];
+    self.descLabel.text =[self.game flipCardAtindex:[self.cardButtons indexOfObject:sender]usingmode:self.tabBarController.selectedIndex];
     [self updateUI];
     self.flipCount++;
     

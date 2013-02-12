@@ -9,6 +9,7 @@
 #import "CardGameSetViewController.h"
 #import "PlayingSetCardDeck.h"
 #import "cardMatching.h"
+#import "PlayingSetCard.h"
 
 @interface CardGameSetViewController ()
 
@@ -19,6 +20,42 @@
 @end
 
 @implementation CardGameSetViewController
+
+
+-(NSAttributedString *) drawShading:(PlayingSetCard *)card
+{
+    NSMutableAttributedString *newString = [[NSMutableAttributedString alloc]initWithString:[card contents]];
+    NSRange wholeString = NSMakeRange(0, [[card contents] length]);
+    if([card.shading isEqualToString:@"solid"])
+    {
+        [newString addAttributes:@{NSForegroundColorAttributeName:[self getColor:card]} range: wholeString   ];
+    }
+    else if([card.shading isEqualToString:@"open"])
+    {
+        UIColor *color = [[self getColor:card] colorWithAlphaComponent:0];
+        [newString addAttributes:@{NSStrokeColorAttributeName:[self getColor:card],NSStrokeWidthAttributeName:@-5,NSForegroundColorAttributeName:color} range:wholeString];
+    }
+    else if([card.shading isEqualToString:@"striped"])
+    {
+        UIColor *color = [[self getColor:card] colorWithAlphaComponent:0.2];
+        [newString addAttributes:@{NSForegroundColorAttributeName:color} range:wholeString];
+    }
+    
+    return newString ;
+}
+
+-(UIColor *)getColor:(PlayingSetCard *)card
+{
+    UIColor *colorname;
+    if([card.color isEqualToString:@"red"])
+        colorname = [UIColor redColor];
+    else if ([card.color isEqualToString:@"green"])
+        colorname   = [UIColor greenColor];
+    else if([card.color isEqualToString:@"purple"])
+        colorname = [UIColor purpleColor];
+    
+    return colorname;
+}
 
 -(void)setFlipCount:(NSUInteger)flipCount
 {
@@ -44,12 +81,14 @@
 {
     for(UIButton *cardButton in self.cardButtons){
         Card *card = [self.game cardAtIndex:[self.cardButtons indexOfObject:cardButton]];
-        [cardButton setTitle:[card contents] forState:UIControlStateSelected];
-        [cardButton setTitle:[card contents] forState:UIControlStateSelected|UIControlStateDisabled ];
-        
+        if([card isKindOfClass:[PlayingSetCard class]]){
+        NSAttributedString *cardContents= [self drawShading:(PlayingSetCard *)card];
+            [cardButton setAttributedTitle:cardContents forState:UIControlStateSelected];
+            [cardButton setAttributedTitle:cardContents forState:UIControlStateSelected| UIControlStateDisabled];
+        }
         cardButton.selected = card.isFaceup;
         cardButton.enabled = !card.isUnPlayable;
-        cardButton.alpha = (card.isUnPlayable)? 0.3:1.0;
+        cardButton.alpha = (card.isUnPlayable)? 0.0:1.0;
         
     }
 }
@@ -67,7 +106,8 @@
 }
 - (IBAction)buttonClick:(UIButton *)sender {
     sender.selected =  ![sender isSelected];
-   // [self.game flipCardAtindex:[self.cardButtons indexOfObject:sender] usingmode:nil];
+   [self.game flipCardAtindex:[self.cardButtons indexOfObject:sender] usingmode:self.tabBarController.selectedIndex];
+    
     self.flipCount++;
     [self updateUI];
 }

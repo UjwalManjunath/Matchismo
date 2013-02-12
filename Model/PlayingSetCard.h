@@ -9,6 +9,7 @@
 #import "Card.h"
 
 @interface PlayingSetCard : Card
+
 @property (nonatomic) NSUInteger number;
 @property (nonatomic,strong) NSString *symbol;
 @property (nonatomic,strong) NSString *shading;

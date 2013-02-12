@@ -13,11 +13,71 @@
 
 -(int)match:(NSArray *)otherCards
 {
+    int equalNumberCount = 0,unEqualNumberCount=0;
+    int equalColorCount=0,unEqualColorCount=0;
+    int equalShadingCount=0, unEqualShadingCount=0;
+    int equalSymbolCount=0, unEqualSymbolCount=0;
     int score=0;
-    
+    for(PlayingSetCard *card in otherCards)
+    {
+       if(self.number == card.number)
+       {
+           equalNumberCount++;
+        
+       }else
+       {
+           unEqualNumberCount++;
+          
+       }
+        
+        if([self.color isEqualToString:card.color])
+        {
+            equalColorCount++;
+        }
+        else{
+            unEqualColorCount++;
+        }
+        if([self.shading isEqualToString:card.shading])
+        {
+            equalShadingCount++;
+        }
+        else{
+           unEqualShadingCount++;
+        }
+        if([self.symbol isEqualToString:card.symbol])
+        {
+            equalSymbolCount++;
+            
+        }else{
+            unEqualSymbolCount++;
+        }
+        
+    }
+    int count = [otherCards count];
+    if((equalSymbolCount == count || unEqualSymbolCount ==count ) && (equalShadingCount ==count || unEqualShadingCount==count) && (equalNumberCount ==count || unEqualNumberCount ==count) &&(unEqualColorCount ==count|| equalColorCount==count) )
+        score=1;
     return score;
 }
 
+
+
+
+-(NSString *)contents{
+  
+    //@[] is [NSArray alloc]initwithObjects: ...
+    NSString *cardWithSymbols = [self.symbol stringByPaddingToLength:self.number withString:self.symbol startingAtIndex:0];
+  
+    
+    
+        
+    
+   
+ 
+    return cardWithSymbols;
+    
+    
+ //   return [rankString[self.rank] stringByAppendingString:self.suit];
+}
 
 -(NSString *)symbol{
     return _symbol ? _symbol : @"?";
@@ -30,7 +90,7 @@
 
 +(NSArray *)validSymbol
 {
-    return @[@"diamond",@"squiggle",@"oval"];
+    return @[@"▲",@"●",@"■"];
 }
 
 +(NSArray *)validColor
