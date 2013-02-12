@@ -17,6 +17,7 @@
 @property (nonatomic)NSUInteger flipCount;
 @property (weak, nonatomic) IBOutlet UILabel *flipLabel;
 @property (weak, nonatomic) IBOutlet UILabel *labelDescription;
+@property (weak, nonatomic) IBOutlet UILabel *scoreLabel;
 @property (nonatomic,strong) cardMatching *game;
 @end
 
@@ -85,15 +86,31 @@
         if([card isKindOfClass:[PlayingSetCard class]]){
         NSAttributedString *cardContents= [self drawShading:(PlayingSetCard *)card];
             [cardButton setAttributedTitle:cardContents forState:UIControlStateSelected];
-            [cardButton setAttributedTitle:cardContents forState:UIControlStateSelected| UIControlStateDisabled];
+     
+                [cardButton setAttributedTitle:cardContents forState:UIControlStateNormal];
+           // [cardButton setAttributedTitle:cardContents forState:UIControlStateSelected| UIControlStateDisabled];
         }
         cardButton.selected = card.isFaceup;
         cardButton.enabled = !card.isUnPlayable;
         cardButton.alpha = (card.isUnPlayable)? 0.0:1.0;
+        if([cardButton isSelected])
+            [ cardButton setBackgroundColor:[UIColor yellowColor]];
+        else
+            [cardButton setBackgroundColor:[UIColor whiteColor]];
         
     }
+    self.scoreLabel.text = [NSString stringWithFormat:@"Score: %d",self.game.score];
 }
 
+- (IBAction)dealButton{
+    self.game =nil;
+    
+    [self game];
+    [self updateUI];
+    self.flipCount =0;
+    self.labelDescription.text = @"New Game";
+    
+}
 
 
 
@@ -106,7 +123,7 @@
     return self;
 }
 - (IBAction)buttonClick:(UIButton *)sender {
-    sender.selected =  ![sender isSelected];
+   
    self.labelDescription.text =[self.game flipCardAtindex:[self.cardButtons indexOfObject:sender] usingmode:self.tabBarController.selectedIndex];
     
     self.flipCount++;
