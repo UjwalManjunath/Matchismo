@@ -124,7 +124,8 @@
 }
 - (IBAction)buttonClick:(UIButton *)sender {
    
-   self.labelDescription.text =[self.game flipCardAtindex:[self.cardButtons indexOfObject:sender] usingmode:self.tabBarController.selectedIndex];
+    self.labelDescription.attributedText= sender.currentAttributedTitle ;
+    //[self.game flipCardAtindex:[self.cardButtons indexOfObject:sender] usingmode:self.tabBarController.selectedIndex];
     
     self.flipCount++;
     [self updateUI];

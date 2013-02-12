@@ -81,7 +81,7 @@
                             cardPlayed.faceUp=NO;
                         }
                         self.score-=MISMATCH_PENALTY;
-                        description = [NSString stringWithFormat:@"%@ , %@ don't match!! %d point penalty",card.contents,[cardMatching getCardContentsFromArray:playingCards],MISMATCH_PENALTY];
+                        description = [NSString stringWithFormat:@"%@ , %@ don't match!! -%d points ",card.contents,[cardMatching getCardContentsFromArray:playingCards],MISMATCH_PENALTY];
                     }
                      }else continue;
                  
@@ -107,6 +107,7 @@
     }
     return [cardContents componentsJoinedByString:@","];
 }
+
 
     
                 

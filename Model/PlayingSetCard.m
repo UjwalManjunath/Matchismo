@@ -53,13 +53,6 @@
   
     //@[] is [NSArray alloc]initwithObjects: ...
     NSString *cardWithSymbols = [self.symbol stringByPaddingToLength:self.number withString:self.symbol startingAtIndex:0];
-  
-    
-    
-        
-    
-   
- 
     return cardWithSymbols;
     
     
