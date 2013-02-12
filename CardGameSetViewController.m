@@ -16,6 +16,7 @@
 @property (strong, nonatomic) IBOutletCollection(UIButton) NSArray *cardButtons;
 @property (nonatomic)NSUInteger flipCount;
 @property (weak, nonatomic) IBOutlet UILabel *flipLabel;
+@property (weak, nonatomic) IBOutlet UILabel *labelDescription;
 @property (nonatomic,strong) cardMatching *game;
 @end
 
@@ -106,7 +107,7 @@
 }
 - (IBAction)buttonClick:(UIButton *)sender {
     sender.selected =  ![sender isSelected];
-   [self.game flipCardAtindex:[self.cardButtons indexOfObject:sender] usingmode:self.tabBarController.selectedIndex];
+   self.labelDescription.text =[self.game flipCardAtindex:[self.cardButtons indexOfObject:sender] usingmode:self.tabBarController.selectedIndex];
     
     self.flipCount++;
     [self updateUI];

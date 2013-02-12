@@ -63,17 +63,18 @@
             if(otherCard.isFaceup && !otherCard.isUnPlayable){
                         [playingCards addObject:otherCard];
             
+                 if([playingCards count] ==gameMode+1){
                 //if([playingCards count] ==gameMode+1){
                       int matchScore = [card match:[playingCards copy]];
                     if(matchScore){
-                        if([playingCards count] ==gameMode+1){
+                       
                             card.unPlayable =YES;
                             for(Card *cardsPlayed in playingCards){
                                 cardsPlayed.UnPlayable=YES;
                             }
                             self.score+=matchScore*MATCH_BONUS;
                             description=[NSString stringWithFormat:@"Matched %@,%@, +%d points",card.contents,[cardMatching getCardContentsFromArray:[playingCards copy]],matchScore*MATCH_BONUS];
-                        }else continue;
+                       
                     } else {
                         for(Card *cardPlayed in playingCards){
                             cardPlayed.unPlayable=NO;
@@ -82,9 +83,10 @@
                         self.score-=MISMATCH_PENALTY;
                         description = [NSString stringWithFormat:@"%@ , %@ don't match!! %d point penalty",card.contents,[cardMatching getCardContentsFromArray:playingCards],MISMATCH_PENALTY];
                     }
-                    
+                     }else continue;
                  
-                }
+            }
+            
                
             }
                    self.score-=FLIP_COST;

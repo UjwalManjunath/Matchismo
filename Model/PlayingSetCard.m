@@ -10,52 +10,39 @@
 
 @implementation PlayingSetCard
 
-
+#define ALLEQUAL 3
+#define ALLNOTEQUAL 1
 -(int)match:(NSArray *)otherCards
 {
-    int equalNumberCount = 0,unEqualNumberCount=0;
-    int equalColorCount=0,unEqualColorCount=0;
-    int equalShadingCount=0, unEqualShadingCount=0;
-    int equalSymbolCount=0, unEqualSymbolCount=0;
+    
     int score=0;
+    
+    NSMutableSet *numberSet = [[NSMutableSet alloc]init];
+    NSMutableSet *colorSet = [[NSMutableSet alloc]init];
+    NSMutableSet *shadingSet =[[NSMutableSet alloc]init];
+    NSMutableSet *symbolSet = [[NSMutableSet alloc]init];
+    
+    [numberSet addObject:[NSNumber numberWithUnsignedInt:self.number]];
+    [colorSet addObject:self.color];
+    [shadingSet addObject:self.shading];
+    [symbolSet addObject:self.symbol];
+    
     for(PlayingSetCard *card in otherCards)
     {
-       if(self.number == card.number)
-       {
-           equalNumberCount++;
-        
-       }else
-       {
-           unEqualNumberCount++;
-          
-       }
-        
-        if([self.color isEqualToString:card.color])
-        {
-            equalColorCount++;
-        }
-        else{
-            unEqualColorCount++;
-        }
-        if([self.shading isEqualToString:card.shading])
-        {
-            equalShadingCount++;
-        }
-        else{
-           unEqualShadingCount++;
-        }
-        if([self.symbol isEqualToString:card.symbol])
-        {
-            equalSymbolCount++;
-            
-        }else{
-            unEqualSymbolCount++;
-        }
+        [numberSet addObject:[NSNumber numberWithUnsignedInt:card.number]];
+        [colorSet addObject:card.color];
+        [shadingSet addObject:card.shading];
+        [symbolSet addObject:card.symbol];
         
     }
-    int count = [otherCards count];
-    if((equalSymbolCount == count || unEqualSymbolCount ==count ) && (equalShadingCount ==count || unEqualShadingCount==count) && (equalNumberCount ==count || unEqualNumberCount ==count) &&(unEqualColorCount ==count|| equalColorCount==count) )
-        score=1;
+    
+    if( ([numberSet count ] == ALLEQUAL || [numberSet count ]== ALLNOTEQUAL) &&
+       ([shadingSet count]==ALLEQUAL ||[shadingSet count]== ALLNOTEQUAL) &&
+       ([colorSet count] == ALLEQUAL ||[colorSet count] == ALLNOTEQUAL  ) &&
+       ([symbolSet count]==ALLEQUAL ||[symbolSet count]== ALLNOTEQUAL))
+        score = 4;
+    
+ 
     return score;
 }
 
