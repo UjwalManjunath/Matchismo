@@ -62,98 +62,50 @@
 {
     NSMutableArray *selectCards= [[NSMutableArray alloc]initWithArray:self.selectedCards];
     NSMutableArray *playingCards = [[NSMutableArray alloc]init];
-   
     Card *card = [self cardAtIndex:index];
     if(card && !card.isUnPlayable)
     {
-        if(!card.isFaceup)
-        {
+        if(!card.isFaceup){
             [selectCards addObject:card];
-            
-           
             self.status = @"flip";
             for(Card *otherCard in self.cards){
-             
-            if(otherCard.isFaceup && !otherCard.isUnPlayable){
-                        [playingCards addObject:otherCard];
-              
-                 if([playingCards count] ==gameMode+1){
-                      int matchScore = [card match:[playingCards copy]];
-                    if(matchScore){
-                       
+                if(otherCard.isFaceup && !otherCard.isUnPlayable){
+                    [playingCards addObject:otherCard];
+                    if([playingCards count] ==gameMode+1){
+                        int matchScore = [card match:[playingCards copy]];
+                        if(matchScore){
                             card.unPlayable =YES;
                             for(Card *cardsPlayed in playingCards){
                                 cardsPlayed.UnPlayable=YES;
-                                
-                            }
-                        self.deltaScore = matchScore *MATCH_BONUS;
+                                }
+                            self.deltaScore = matchScore *MATCH_BONUS;
                             self.score+=self.deltaScore;
-                       
-                        self.status = @"Match";
-                       
-                    } else {
-                        self.misMatchCards = [[NSArray alloc]initWithArray:selectCards];
-                        for(Card *cardPlayed in playingCards){
-                            cardPlayed.unPlayable=NO;
-                            cardPlayed.faceUp=NO;
-                            [selectCards removeObject:cardPlayed];
-                        }
-                        self.deltaScore = MISMATCH_PENALTY;
-                        self.score-=self.deltaScore;
-                  
-                        self.status=@"Mismatch";
+                            self.status = @"Match";
+                            }
+                        else
+                            {
+                            self.misMatchCards = [[NSArray alloc]initWithArray:selectCards];
+                            for(Card *cardPlayed in playingCards){
+                                cardPlayed.unPlayable=NO;
+                                cardPlayed.faceUp=NO;
+                                [selectCards removeObject:cardPlayed];
+                                }
+                            self.deltaScore = MISMATCH_PENALTY;
+                            self.score-=self.deltaScore;
+                            self.status=@"Mismatch";
+                            }
+                        }else continue;
                     }
-                     }else continue;
-                 
-            }
             
-               
-            }
-                   self.score-=FLIP_COST;
-           
-        }else {
+                }
+            self.score-=FLIP_COST;
+            }else {
             [selectCards removeObject:card];
             self.status= @"unflip";
-           
-        }
+           }
         card.faceUp = !card.isFaceup ;
     }
     self.selectedCards = [selectCards copy];
-
 }
-
-
-
-
-    
-    
-    
-                
-              
-                        
-             
-        
-                            
-                            
-                            
-                            
-                            
-                            
-                            
-                            
-                            
-                            
-                            
-                            
-                            
-                            
-             
-        
-
-
-
-
-              
-            
         
 @end

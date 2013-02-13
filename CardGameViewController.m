@@ -133,14 +133,11 @@
 
 -(NSString *)getCardContentsFromArray:(NSArray *)arrayOfCards{
     NSMutableArray *cards = [[NSMutableArray alloc]init];
-    
     for( Card *card in arrayOfCards)
     {
         [cards addObject:card.contents];
-        
     }
     return [cards componentsJoinedByString:@" & "];
-    
 }
 
 @end
