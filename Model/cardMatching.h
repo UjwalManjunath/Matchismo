@@ -15,10 +15,14 @@
 //designated initializer
 -(id)initWithCardCount:(NSUInteger)count
              usingDeck:(Deck *)deck;
--(NSString *) flipCardAtindex:(NSUInteger)index
+-(void ) flipCardAtindex:(NSUInteger)index
 usingmode:(NSUInteger)gameMode;
 
 -(Card *) cardAtIndex:(NSUInteger)index ;
 
+
+@property (nonatomic,strong) NSString *status;
 @property(readonly,nonatomic)int score;
+@property(readonly,nonatomic)int deltaScore;
+@property(nonatomic,strong) NSArray *selectedCards;
 @end

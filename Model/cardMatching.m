@@ -10,6 +10,7 @@
 
 @interface cardMatching()
 @property(readwrite,nonatomic)int score;
+@property(readwrite,nonatomic)int deltaScore;
 @property (strong,nonatomic) NSMutableArray *cards; //of Card
 @end
 
@@ -47,9 +48,14 @@
     return self;
 }
 
--(NSString *) flipCardAtindex:(NSUInteger)index usingmode:(NSUInteger)gameMode
+-(NSArray *)selectedCards
 {
-   
+    if(!_selectedCards) _selectedCards = [[NSArray alloc]init];
+    return _selectedCards;
+}
+-(void) flipCardAtindex:(NSUInteger)index usingmode:(NSUInteger)gameMode
+{
+    NSMutableArray *selectCards= [[NSMutableArray alloc]initWithArray:self.selectedCards];
     NSMutableArray *playingCards = [[NSMutableArray alloc]init];
     NSString *description;
     Card *card = [self cardAtIndex:index];
@@ -57,31 +63,39 @@
     {
         if(!card.isFaceup)
         {
+            [selectCards addObject:card];
+            
             description = [NSString stringWithFormat:@"You Flipped %@, %d point penalty",card.contents,FLIP_COST];
+            self.status = @"flip";
             for(Card *otherCard in self.cards){
              
             if(otherCard.isFaceup && !otherCard.isUnPlayable){
                         [playingCards addObject:otherCard];
-            
+              
                  if([playingCards count] ==gameMode+1){
-                //if([playingCards count] ==gameMode+1){
                       int matchScore = [card match:[playingCards copy]];
                     if(matchScore){
                        
                             card.unPlayable =YES;
                             for(Card *cardsPlayed in playingCards){
                                 cardsPlayed.UnPlayable=YES;
+                                
                             }
-                            self.score+=matchScore*MATCH_BONUS;
-                            description=[NSString stringWithFormat:@"Matched %@,%@, +%d points",card.contents,[cardMatching getCardContentsFromArray:[playingCards copy]],matchScore*MATCH_BONUS];
+                        self.deltaScore = matchScore *MATCH_BONUS;
+                            self.score+=self.deltaScore;
+                          //  description=[NSString stringWithFormat:@"Matched %@,%@, +%d points",card.contents,[cardMatching getCardContentsFromArray:[playingCards copy]],matchScore*MATCH_BONUS];
+                        self.status = @"Match";
                        
                     } else {
                         for(Card *cardPlayed in playingCards){
                             cardPlayed.unPlayable=NO;
                             cardPlayed.faceUp=NO;
+                            [selectCards removeObject:cardPlayed];
                         }
-                        self.score-=MISMATCH_PENALTY;
-                        description = [NSString stringWithFormat:@"%@ , %@ don't match!! -%d points ",card.contents,[cardMatching getCardContentsFromArray:playingCards],MISMATCH_PENALTY];
+                        self.deltaScore = MISMATCH_PENALTY;
+                        self.score-=self.deltaScore;
+                     //   description = [NSString stringWithFormat:@"%@ , %@ don't match!! -%d points ",card.contents,[cardMatching getCardContentsFromArray:[playingCards copy]],MISMATCH_PENALTY];
+                        self.status=@"Mismatch";
                     }
                      }else continue;
                  
@@ -92,26 +106,22 @@
                    self.score-=FLIP_COST;
            
         }else {
+            [selectCards removeObject:card];
+            self.status= @"flip";
             description = @"You UnFlipped a Card";
         }
         card.faceUp = !card.isFaceup ;
     }
-    return description;
+    self.selectedCards = [selectCards copy];
+
 }
 
-+(NSString *)getCardContentsFromArray:(NSArray *)arrayOfCards{
-    NSMutableArray *cardContents = [[NSMutableArray alloc]init];
-    for(Card *card in arrayOfCards)
-    {
-        [cardContents addObject:card.contents];
-    }
-    return [cardContents componentsJoinedByString:@","];
-}
+
 
 
     
-                
-                
+    
+    
                 
               
                         

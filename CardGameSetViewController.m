@@ -10,6 +10,7 @@
 #import "PlayingSetCardDeck.h"
 #import "cardMatching.h"
 #import "PlayingSetCard.h"
+#import "Card.h"
 
 @interface CardGameSetViewController ()
 
@@ -39,7 +40,7 @@
     }
     else if([card.shading isEqualToString:@"striped"])
     {
-        UIColor *color = [[self getColor:card] colorWithAlphaComponent:0.2];
+        UIColor *color = [[self getColor:card] colorWithAlphaComponent:0.3];
         [newString addAttributes:@{NSForegroundColorAttributeName:color} range:wholeString];
     }
     
@@ -122,13 +123,51 @@
     }
     return self;
 }
+
 - (IBAction)buttonClick:(UIButton *)sender {
-   
-    self.labelDescription.attributedText= sender.currentAttributedTitle ;
-    //[self.game flipCardAtindex:[self.cardButtons indexOfObject:sender] usingmode:self.tabBarController.selectedIndex];
+
+     
+    [self.game flipCardAtindex:[self.cardButtons indexOfObject:sender] usingmode:self.tabBarController.selectedIndex];
     
+    
+     NSMutableAttributedString *descriptionString = [self getDescription];
+ //   [descriptionString appendAttributedString:[self getCardContentsFromArray:self.game.selectedCards]];
+    
+    
+    self.labelDescription.attributedText = descriptionString;
     self.flipCount++;
     [self updateUI];
+}
+
+-(NSMutableAttributedString *) getDescription
+{
+    
+    NSMutableAttributedString *cards = [[NSMutableAttributedString alloc]init    ];
+    NSMutableAttributedString *descriptionString ;;
+     cards =[self getCardContentsFromArray:self.game.selectedCards];
+    if([self.game.status isEqualToString:@"Match"]){
+        
+       descriptionString =[[NSMutableAttributedString alloc]initWithString:@"Matched "];
+        [descriptionString appendAttributedString:cards];
+        [descriptionString appendAttributedString:[[NSMutableAttributedString alloc]initWithString:[NSString stringWithFormat:@"for %d Points",self.game.deltaScore]]];
+        self.game.selectedCards =Nil;
+    }
+    else if([self.game.status isEqualToString:@"Mismatch"])
+    {
+         
+        descriptionString =
+         [ [NSMutableAttributedString alloc]initWithString:@"Mismatch"] ;
+        [descriptionString appendAttributedString:[[NSMutableAttributedString alloc]initWithString:[NSString stringWithFormat:@" -%d Points",self.game.deltaScore]]];
+     
+    }
+    else if([self.game.status isEqualToString:@"flip"])
+    {
+       descriptionString =[[NSMutableAttributedString alloc]initWithString:@"Selected "];
+        [descriptionString appendAttributedString:cards];
+    }
+
+    
+    return descriptionString;
 }
 
 - (void)viewDidLoad
@@ -143,7 +182,24 @@
     // Dispose of any resources that can be recreated.
 }
 
-
+-(NSMutableAttributedString *)getCardContentsFromArray:(NSArray *)arrayOfCards{
+ //   NSMutableArray *cardContents = [[NSMutableArray alloc]init];
+    NSMutableAttributedString *desc = [[NSMutableAttributedString alloc]init];
+    NSMutableAttributedString *delimiter = [[NSMutableAttributedString alloc]initWithString:@"&"];
+    int count = [arrayOfCards count];
+    for(PlayingSetCard *card in arrayOfCards)
+    {
+        if([card isKindOfClass:[PlayingSetCard class]]){
+            [desc appendAttributedString:[self drawShading:card] ];
+            if(count >1)
+            {
+                count--;
+                [desc appendAttributedString:delimiter];
+            }
+        }
+    }
+    return desc;
+}
 
 
 

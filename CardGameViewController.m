@@ -36,7 +36,7 @@
 
 - (IBAction)gameModeChanged:(id)sender {
     NSLog(@"%d", self.gameMode.selectedSegmentIndex);
- // [self.gameMode titleForSegmentAtIndex:<#(NSUInteger)#>]
+
     
 }
 
@@ -84,7 +84,8 @@
 {
     self.gameMode.userInteractionEnabled=NO;
     self.gameMode.alpha=0.3;
-    self.descLabel.text =[self.game flipCardAtindex:[self.cardButtons indexOfObject:sender]usingmode:self.tabBarController.selectedIndex];
+    //self.descLabel.text =
+    [self.game flipCardAtindex:[self.cardButtons indexOfObject:sender]usingmode:self.tabBarController.selectedIndex];
     [self updateUI];
     self.flipCount++;
     
