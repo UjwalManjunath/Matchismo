@@ -25,4 +25,6 @@ usingmode:(NSUInteger)gameMode;
 @property(readonly,nonatomic)int score;
 @property(readonly,nonatomic)int deltaScore;
 @property(nonatomic,strong) NSArray *selectedCards;
+@property(nonatomic,strong)
+NSArray *misMatchCards;
 @end

@@ -86,9 +86,37 @@
     self.gameMode.alpha=0.3;
     //self.descLabel.text =
     [self.game flipCardAtindex:[self.cardButtons indexOfObject:sender]usingmode:self.tabBarController.selectedIndex];
+    self.descLabel.text = [self getDescription];
     [self updateUI];
     self.flipCount++;
     
+}
+-(NSString *)getDescription
+{
+    NSString *description;
+    if([self.game.status isEqualToString:@"Match"])
+    {
+        description =[NSString stringWithFormat:@"Matched "];
+        description =[description stringByAppendingString:[self getCardContentsFromArray:self.game.selectedCards] ] ;
+        description = [description stringByAppendingString:[NSString stringWithFormat:@" for %d points",self.game.deltaScore]];
+        self.game.selectedCards =nil;
+    }else if ([self.game.status isEqualToString:@"Mismatch"])
+    {
+        description = [self getCardContentsFromArray:self.game.misMatchCards];
+        description = [description stringByAppendingString:@" Dont Match"];
+        description = [description stringByAppendingString:[NSString stringWithFormat:@" -%d points",self.game.deltaScore]];
+        self.game.misMatchCards=nil;
+    }
+    else if([self.game.status isEqualToString:@"flip"])
+    {
+        description = [NSString stringWithFormat:@"You fliped %@ -1 point",[self getCardContentsFromArray:self.game.selectedCards]];
+      
+    }else
+    {
+        description = @"You unflipped a card";
+    }
+    
+    return description ;
 }
 - (IBAction)dealAgain
 {
@@ -99,6 +127,19 @@
     [self updateUI];
     self.flipCount =0;
     self.descLabel.text =@"New Cards";
+    
+}
+
+
+-(NSString *)getCardContentsFromArray:(NSArray *)arrayOfCards{
+    NSMutableArray *cards = [[NSMutableArray alloc]init];
+    
+    for( Card *card in arrayOfCards)
+    {
+        [cards addObject:card.contents];
+        
+    }
+    return [cards componentsJoinedByString:@" & "];
     
 }
 

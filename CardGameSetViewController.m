@@ -155,17 +155,19 @@
     else if([self.game.status isEqualToString:@"Mismatch"])
     {
          
-        descriptionString =
-         [ [NSMutableAttributedString alloc]initWithString:@"Mismatch"] ;
+        descriptionString = [self getCardContentsFromArray:self.game.misMatchCards];
+        
+         [descriptionString appendAttributedString:[ [NSMutableAttributedString alloc]initWithString:@" don't Match"] ];
         [descriptionString appendAttributedString:[[NSMutableAttributedString alloc]initWithString:[NSString stringWithFormat:@" -%d Points",self.game.deltaScore]]];
-     
+     self.game.misMatchCards =Nil;
     }
-    else if([self.game.status isEqualToString:@"flip"])
+    else 
     {
        descriptionString =[[NSMutableAttributedString alloc]initWithString:@"Selected "];
         [descriptionString appendAttributedString:cards];
     }
-
+    NSRange range = NSMakeRange(0, [descriptionString length]);
+    [descriptionString addAttributes:@{NSFontAttributeName: [UIFont systemFontOfSize:13]} range:range];
     
     return descriptionString;
 }
