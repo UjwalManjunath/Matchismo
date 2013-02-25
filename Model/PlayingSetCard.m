@@ -70,7 +70,7 @@
 
 +(NSArray *)validSymbol
 {
-    return @[@"▲",@"●",@"■"];
+    return @[@"diamond",@"squiggle",@"oval"];
 }
 
 +(NSArray *)validColor

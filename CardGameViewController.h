@@ -13,4 +13,5 @@
 -(Deck *)createDeck; //abstract
 -(NSUInteger) startCardCount; //abstract
 -(void)updateCell:(UICollectionViewCell *)cell usingCard:(Card *)Card animate:(BOOL)animate; //abstract
+-(NSString *) reuseIdentifier; //abstract
 @end

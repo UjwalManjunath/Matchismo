@@ -37,12 +37,17 @@
 
 -(UICollectionViewCell *) collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"PlayingCard" forIndexPath:indexPath];
+    UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:[self reuseIdentifier] forIndexPath:indexPath];
     Card *card = [self.game cardAtIndex:indexPath.item];
     [self updateCell:cell usingCard:card animate:NO];
     
     
     return cell;
+}
+
+-(NSString *)reuseIdentifier
+{
+    return nil; //abstract
 }
 
 -(void)updateCell:(UICollectionViewCell *)cell usingCard:(Card *)Card animate:(BOOL)animate
@@ -106,7 +111,7 @@
     [self.game flipCardAtindex:index.item usingmode:self.tabBarController.selectedIndex];
     self.descLabel.text = [self getDescription];
     [self updateUI];
-    self.flipCount++;
+    
     }
     
 }

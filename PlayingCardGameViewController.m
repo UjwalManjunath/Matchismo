@@ -25,6 +25,12 @@
 {
     return 20;
 }
+
+-(NSString *)reuseIdentifier
+{
+    return @"PlayingCard";
+}
+
 -(void)updateCell:(UICollectionViewCell *)cell usingCard:(Card *)Card animate:(BOOL)animate
 {
     if([cell isKindOfClass:[PlayingCardCollectionViewCell class]])

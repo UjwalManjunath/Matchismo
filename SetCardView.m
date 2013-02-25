@@ -29,17 +29,19 @@
 
 - (void)drawSetCard
 {
-    switch (self.symbol) {
-        case 1:
-            [self drawDiamond];
-            break;
-        case 2:
-            [self drawSquiggle];
-            break;
-        case 3:
-            [self drawOval];
-            break;
+    if([self.symbol isEqualToString:@"diamond"])
+    {
+        [self drawDiamond];
     }
+    else if ([self.symbol isEqualToString:@"squiggle"])
+    {
+        [self drawSquiggle];
+    }
+    else if([self.symbol isEqualToString:@"oval"])
+    {
+        [self drawOval];
+    }
+   
 }
 
 #define SQUIGGLE_LONG_DIAGONAL_DELTA_X_RATIO 0.594
@@ -157,16 +159,24 @@ void patternPainting (void *info)
 }
 
 #define SYMBOL_OFFSET_RATIO 0.28
+-(NSUInteger)colorIndex
+{
+    return [[SetCardView validColor] indexOfObject:self.color];
+        
+}
 
 - (void)repeatSymbols:(UIBezierPath *)path
 {
+    
     NSArray *colorPallette = @[[UIColor redColor],[UIColor colorWithRed: 0.0 green:0.5 blue:0.0 alpha:1.0],[UIColor purpleColor]];
-    UIColor *symbolColor = colorPallette[self.color-1];
+    UIColor *symbolColor = colorPallette[[self colorIndex]];
+    
+    
     [symbolColor setStroke];
     CGFloat symbolFillColor[4]; // Array with r,g,b,a components to draw pattern
     [symbolColor getRed:&symbolFillColor[0] green:&symbolFillColor[1] blue:&symbolFillColor[2] alpha:&symbolFillColor[3]];
     
-    switch (self.shading) {
+    switch ([[SetCardView validShading]indexOfObject:self.shading]+1) {
         case 2:
             patternPainting(symbolFillColor);
             break;
@@ -217,7 +227,7 @@ void patternPainting (void *info)
     }
 }
 
-- (void)setSymbol:(NSUInteger)symbol
+- (void)setSymbol:(NSString *)symbol
 
 {
     _symbol = symbol;
@@ -230,13 +240,13 @@ void patternPainting (void *info)
     [self setNeedsDisplay];
 }
 
-- (void)setColor:(NSUInteger)color
+- (void)setColor:(NSString *)color
 {
     _color =color;
     [self setNeedsDisplay];
 }
 
-- (void)setShading:(NSUInteger)shading
+- (void)setShading:(NSString *)shading
 {
     _shading =shading;
     [self setNeedsDisplay];
@@ -253,6 +263,35 @@ void patternPainting (void *info)
     _cornerRadius = cornerRadius;
     [self setNeedsDisplay];
 }
+
+
+
++(NSArray *)numbers
+{
+    return @[@"?",@"1",@"2",@"3"];
+}
+
++(NSArray *)validSymbol
+{
+    return @[@"diamond",@"Squiggle",@"oval"];
+}
+
++(NSArray *)validColor
+{
+    return @[@"red",@"green",@"purple"];
+}
+
++(NSArray *)validShading
+{
+    return  @[@"solid",@"striped",@"open"];
+    
+}
+
++(NSUInteger) maxNumber
+{
+    return [[self numbers]count]-1;
+}
+
 
 -(void)setup
 {
