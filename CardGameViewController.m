@@ -7,14 +7,15 @@
 //
 
 #import "CardGameViewController.h"
-#import "PlayingCardDeck.h"
+
 #import "cardMatching.h"
 
-@interface CardGameViewController ()
+@interface CardGameViewController () <UICollectionViewDataSource,UICollectionViewDelegate>
 @property (weak, nonatomic) IBOutlet UILabel *flipsLabel;
 @property (nonatomic) int flipCount;
-@property (strong, nonatomic) IBOutletCollection(UIButton) NSArray *cardButtons;
+
 @property (weak, nonatomic) IBOutlet UILabel *descLabel;
+@property (weak, nonatomic) IBOutlet UICollectionView *cardCollectionView;
 
 @property (strong, nonatomic) IBOutlet UISegmentedControl *gameMode;
 @property (weak, nonatomic) IBOutlet UILabel *scoreLabel;
@@ -24,13 +25,48 @@
 
 @implementation CardGameViewController
 
+-(NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
+{
+    return 1;
+}
+
+-(NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
+{
+    return [self startCardCount]; //askk model; this is not right way;
+}
+
+-(UICollectionViewCell *) collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"PlayingCard" forIndexPath:indexPath];
+    Card *card = [self.game cardAtIndex:indexPath.item];
+    [self updateCell:cell usingCard:card animate:NO];
+    
+    
+    return cell;
+}
+
+-(void)updateCell:(UICollectionViewCell *)cell usingCard:(Card *)Card animate:(BOOL)animate
+{
+    //abstract
+}
+
 -(cardMatching *)game
 {
-    if(!_game) _game = [[cardMatching alloc]initWithCardCount:[self.cardButtons count]
-                                                   usingDeck:[[PlayingCardDeck alloc]init]];
+    if(!_game) _game = [[cardMatching alloc]initWithCardCount:[self startCardCount]
+                                                   usingDeck:[self createDeck]];
     return _game;
 }
 
+-(Deck *)createDeck
+{
+    return nil;
+    /// abstract
+}
+
+-(NSUInteger)startCardCount
+{
+    return nil; //abstract
+}
 
 
 
@@ -40,35 +76,15 @@
     
 }
 
--(void)setCardButtons:(NSArray *)cardButtons
-{
-    _cardButtons=cardButtons;
-    [self updateUI];
 
-    
-}
 
 -(void)updateUI    //keep UI in synch with the model
 {
-    for(UIButton *cardButton in self.cardButtons)
+    for(UICollectionViewCell *cell in [self.cardCollectionView visibleCells])
     {
-       // UIImage *noimage ;
-        UIImage *cardBackImage = [UIImage imageNamed:@"cardimage.jpg"];
-        Card *card = [self.game cardAtIndex:[self.cardButtons indexOfObject:cardButton]];
-         
-        cardButton.imageEdgeInsets = UIEdgeInsetsMake(3, 2, 3, 2);
-       [cardButton setTitle:card.contents forState:UIControlStateSelected];
-      
-        
-        [cardButton setTitle:card.contents forState:UIControlStateSelected|UIControlStateDisabled];
-
-        cardButton.selected = card.isFaceup;
-        cardButton.enabled = !card.isUnPlayable;
-        cardButton.alpha = (card.isUnPlayable ? 0.3 : 1.0 );
-        if(cardButton.selected)
-            cardBackImage = nil;
-            [cardButton setImage:cardBackImage forState:UIControlStateNormal ];
-        
+        NSIndexPath *index = [self.cardCollectionView indexPathForCell:cell];
+        Card *card = [self.game cardAtIndex:index.item];
+        [self updateCell:cell usingCard:card animate:YES];
     }
     self.scoreLabel.text = [NSString stringWithFormat:@"Score: %d",self.game.score];
     
@@ -80,15 +96,18 @@
     self.flipsLabel.text = [NSString stringWithFormat:@"Flips: %d",self.flipCount];
 }
 
-- (IBAction)flipCard:(UIButton *)sender
+- (IBAction)flipCard:(UITapGestureRecognizer *)gesture
 {
-    self.gameMode.userInteractionEnabled=NO;
-    self.gameMode.alpha=0.3;
-    //self.descLabel.text =
-    [self.game flipCardAtindex:[self.cardButtons indexOfObject:sender]usingmode:self.tabBarController.selectedIndex];
+    CGPoint tapLocation = [gesture locationInView:self.cardCollectionView];
+    NSIndexPath *index = [self.cardCollectionView indexPathForItemAtPoint:tapLocation];
+    if(index)
+    {
+  
+    [self.game flipCardAtindex:index.item usingmode:self.tabBarController.selectedIndex];
     self.descLabel.text = [self getDescription];
     [self updateUI];
     self.flipCount++;
+    }
     
 }
 -(NSString *)getDescription

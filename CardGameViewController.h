@@ -7,7 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import "Deck.h"
 @interface CardGameViewController : UIViewController
 
+-(Deck *)createDeck; //abstract
+-(NSUInteger) startCardCount; //abstract
+-(void)updateCell:(UICollectionViewCell *)cell usingCard:(Card *)Card animate:(BOOL)animate; //abstract
 @end
