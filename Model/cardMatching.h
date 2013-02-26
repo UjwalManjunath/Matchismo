@@ -17,10 +17,11 @@
              usingDeck:(Deck *)deck;
 -(void ) flipCardAtindex:(NSUInteger)index
 usingmode:(NSUInteger)gameMode;
+-(NSUInteger)getIndexOfCard:(Card *)card;
 
 -(Card *) cardAtIndex:(NSUInteger)index ;
-
-
+-(void)deleteCardAtIndexes:(NSIndexSet *)indexSet;
+-(NSUInteger)noIfCardsInPlay;
 @property (nonatomic,strong) NSString *status;
 @property(readonly,nonatomic)int score;
 @property(readonly,nonatomic)int deltaScore;

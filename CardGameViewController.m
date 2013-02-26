@@ -25,6 +25,7 @@
 
 @implementation CardGameViewController
 
+
 -(NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
 {
     return 1;
@@ -32,7 +33,7 @@
 
 -(NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    return [self startCardCount]; //askk model; this is not right way;
+    return [self.game noIfCardsInPlay]; 
 }
 
 -(UICollectionViewCell *) collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
@@ -92,7 +93,7 @@
         [self updateCell:cell usingCard:card animate:YES];
     }
     self.scoreLabel.text = [NSString stringWithFormat:@"Score: %d",self.game.score];
-    
+    [self removeMatchedcards];
 }
 
 -(void)setFlipCount:(int)flipCount
@@ -107,22 +108,53 @@
     NSIndexPath *index = [self.cardCollectionView indexPathForItemAtPoint:tapLocation];
     if(index)
     {
-  
+       
     [self.game flipCardAtindex:index.item usingmode:self.tabBarController.selectedIndex];
+             
     self.descLabel.text = [self getDescription];
     [self updateUI];
     
     }
     
 }
+
+
+-(void)removeMatchedcards
+{
+    NSMutableIndexSet *indexSet = [[NSMutableIndexSet alloc]init];
+    NSMutableArray *indexPaths = [[NSMutableArray alloc]init];
+    for(UICollectionViewCell *cell in [self.cardCollectionView visibleCells])
+    {
+        NSIndexPath *index = [self.cardCollectionView indexPathForCell:cell];
+        Card *card = [self.game cardAtIndex:index.item];
+        
+        if(card.isFaceup && card.isUnPlayable)
+        {
+            [indexSet addIndex:[self.game getIndexOfCard:card]];
+            [indexPaths addObject:index];
+            
+        }
+    }
+        if([indexSet count])
+        {
+           [self.game deleteCardAtIndexes:indexSet];
+            [self.cardCollectionView deleteItemsAtIndexPaths:indexPaths];
+        }
+    
+  
+}
+
 -(NSString *)getDescription
 {
     NSString *description;
     if([self.game.status isEqualToString:@"Match"])
     {
-        description =[NSString stringWithFormat:@"Matched "];
-        description =[description stringByAppendingString:[self getCardContentsFromArray:self.game.selectedCards] ] ;
-        description = [description stringByAppendingString:[NSString stringWithFormat:@" for %d points",self.game.deltaScore]];
+        
+   
+           
+      //  description =[NSString stringWithFormat:@"Matched "];
+     //   description =[description stringByAppendingString:[self getCardContentsFromArray:self.game.selectedCards] ] ;
+     //   description = [description stringByAppendingString:[NSString stringWithFormat:@" for %d points",self.game.deltaScore]];
         self.game.selectedCards =nil;
     }else if ([self.game.status isEqualToString:@"Mismatch"])
     {
@@ -144,13 +176,13 @@
 }
 - (IBAction)dealAgain
 {
-    self.gameMode.userInteractionEnabled=YES;
-    self.gameMode.alpha=1;
     self.game =nil;
     [self game];
+    [self.cardCollectionView reloadData];
     [self updateUI];
+    
     self.flipCount =0;
-    self.descLabel.text =@"New Cards";
+  //  self.descLabel.text =@"New Cards";
     
 }
 

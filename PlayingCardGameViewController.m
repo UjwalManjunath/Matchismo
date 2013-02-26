@@ -53,6 +53,7 @@
           
             playingCardView.alpha = playingCard.isUnPlayable?0.3:1.0;
             
+            
         }
     }
 }

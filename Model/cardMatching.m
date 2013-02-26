@@ -29,8 +29,16 @@
     return (index <[self.cards count])? self.cards[index]: nil;
 }
 
+-(void )removeCardsAtIndexes:(NSIndexSet *)indexes
+{
+   
+    
+}
+
 -(id)initWithCardCount:(NSUInteger)count
-             usingDeck:(Deck *)deck{
+usingDeck:(Deck *)deck 
+
+{
     self = [super init];
     if(self)
     {
@@ -107,5 +115,22 @@
     }
     self.selectedCards = [selectCards copy];
 }
+
+-(void)deleteCardAtIndexes:(NSIndexSet *)indexSet
+{
+    [self.cards removeObjectsAtIndexes:indexSet ];
+}
+
+-(NSUInteger)getIndexOfCard:(Card *)card
+{
+    return [self.cards indexOfObject:card];
+}
+
+-(NSUInteger)noIfCardsInPlay
+{
+    return [self.cards count];
+}
+
+
         
 @end
