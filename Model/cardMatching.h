@@ -22,6 +22,7 @@ usingmode:(NSUInteger)gameMode;
 -(Card *) cardAtIndex:(NSUInteger)index ;
 -(void)deleteCardAtIndexes:(NSIndexSet *)indexSet;
 -(NSUInteger)noIfCardsInPlay;
+-(void) addCardsFromDeck:(Deck *)deck;
 @property (nonatomic,strong) NSString *status;
 @property(readonly,nonatomic)int score;
 @property(readonly,nonatomic)int deltaScore;

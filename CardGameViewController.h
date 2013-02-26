@@ -8,8 +8,11 @@
 
 #import <UIKit/UIKit.h>
 #import "Deck.h"
-@interface CardGameViewController : UIViewController
 
+#import "cardMatching.h"
+@interface CardGameViewController : UIViewController
+@property (weak, nonatomic) IBOutlet UICollectionView *cardCollectionView;
+@property(nonatomic,strong) cardMatching *game;
 -(Deck *)createDeck; //abstract
 -(NSUInteger) startCardCount; //abstract
 -(void)updateCell:(UICollectionViewCell *)cell usingCard:(Card *)Card animate:(BOOL)animate; //abstract

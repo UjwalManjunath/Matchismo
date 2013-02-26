@@ -25,7 +25,7 @@
 
 -(NSUInteger)startCardCount
 {
-    return 20;
+    return 12;
 }
 
 -(void)updateCell:(UICollectionViewCell *)cell usingCard:(Card *)Card animate:(BOOL)animate
@@ -41,7 +41,7 @@
            setCardView.shading = setCard.shading;
            setCardView.selected = setCard.isFaceup;
         
-           setCardView.alpha = setCard.isUnPlayable?0.3:1.0;
+           [self removeMatchedcards];
        }
    }
     
@@ -52,5 +52,47 @@
     return @"SetCard";
 }
 
+-(void)removeMatchedcards
+{
+    NSMutableIndexSet *indexSet = [[NSMutableIndexSet alloc]init];
+    NSMutableArray *indexPaths = [[NSMutableArray alloc]init];
+    for(UICollectionViewCell *cell in [self.cardCollectionView visibleCells])
+    {
+        NSIndexPath *index = [self.cardCollectionView indexPathForCell:cell];
+        Card *card = [self.game cardAtIndex:index.item];
+        
+        if(card.isFaceup && card.isUnPlayable)
+        {
+            [indexSet addIndex:[self.game getIndexOfCard:card]];
+            [indexPaths addObject:index];
+            
+        }
+    }
+    if([indexSet count])
+    {
+        [self.game deleteCardAtIndexes:indexSet];
+        [self.cardCollectionView deleteItemsAtIndexPaths:indexPaths];
+    }
+    
+    
+}
+- (IBAction)addCards
+{
+    NSMutableArray *indexPaths = [[NSMutableArray alloc]init];
+    [self.game addCardsFromDeck:[self createDeck]];
+    NSUInteger count=[self.cardCollectionView numberOfItemsInSection:0] ;
+    for(; count<[self.game noIfCardsInPlay];count++)
+    {
+        [indexPaths addObject:[NSIndexPath indexPathForItem:count inSection:0]];
+        
+        
+    }
+    [self.cardCollectionView insertItemsAtIndexPaths:indexPaths];
+    [self.cardCollectionView scrollToItemAtIndexPath:[indexPaths lastObject] atScrollPosition:UICollectionViewScrollPositionBottom animated:YES
+     ];    //[self.cardCollectionView reloadItemsAtIndexPaths:indexPaths];
+   // [self.cardCollectionView insert
+    
+    
+}
 
 @end

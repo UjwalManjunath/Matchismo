@@ -15,11 +15,11 @@
 @property (nonatomic) int flipCount;
 
 @property (weak, nonatomic) IBOutlet UILabel *descLabel;
-@property (weak, nonatomic) IBOutlet UICollectionView *cardCollectionView;
+//@property (weak, nonatomic) IBOutlet UICollectionView *cardCollectionView;
 
-@property (strong, nonatomic) IBOutlet UISegmentedControl *gameMode;
+
 @property (weak, nonatomic) IBOutlet UILabel *scoreLabel;
-@property(nonatomic,strong) cardMatching *game;
+
 
 @end
 
@@ -76,11 +76,6 @@
 
 
 
-- (IBAction)gameModeChanged:(id)sender {
-    NSLog(@"%d", self.gameMode.selectedSegmentIndex);
-
-    
-}
 
 
 
@@ -93,14 +88,10 @@
         [self updateCell:cell usingCard:card animate:YES];
     }
     self.scoreLabel.text = [NSString stringWithFormat:@"Score: %d",self.game.score];
-    [self removeMatchedcards];
+   // [self removeMatchedcards];
 }
 
--(void)setFlipCount:(int)flipCount
-{
-    _flipCount = flipCount;
-    self.flipsLabel.text = [NSString stringWithFormat:@"Flips: %d",self.flipCount];
-}
+
 
 - (IBAction)flipCard:(UITapGestureRecognizer *)gesture
 {
@@ -119,30 +110,7 @@
 }
 
 
--(void)removeMatchedcards
-{
-    NSMutableIndexSet *indexSet = [[NSMutableIndexSet alloc]init];
-    NSMutableArray *indexPaths = [[NSMutableArray alloc]init];
-    for(UICollectionViewCell *cell in [self.cardCollectionView visibleCells])
-    {
-        NSIndexPath *index = [self.cardCollectionView indexPathForCell:cell];
-        Card *card = [self.game cardAtIndex:index.item];
-        
-        if(card.isFaceup && card.isUnPlayable)
-        {
-            [indexSet addIndex:[self.game getIndexOfCard:card]];
-            [indexPaths addObject:index];
-            
-        }
-    }
-        if([indexSet count])
-        {
-           [self.game deleteCardAtIndexes:indexSet];
-            [self.cardCollectionView deleteItemsAtIndexPaths:indexPaths];
-        }
-    
-  
-}
+
 
 -(NSString *)getDescription
 {

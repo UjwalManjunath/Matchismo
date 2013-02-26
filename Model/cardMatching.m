@@ -131,6 +131,21 @@ usingDeck:(Deck *)deck
     return [self.cards count];
 }
 
-
+-(void) addCardsFromDeck:(Deck *)deck
+{
+    for (int i=0; i<3; i++) {
+        Card *card = [deck drawRandomCard];
+        if(card) //if count value is greater than deck count
+            [self.cards addObject:card];
+        else {
+          
+            break;
+        }
         
+    }
+    
+}
+
+
+
 @end
