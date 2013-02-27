@@ -74,11 +74,6 @@
     return nil; //abstract
 }
 
-
-
-
-
-
 -(void)updateUI    //keep UI in synch with the model
 {
     for(UICollectionViewCell *cell in [self.cardCollectionView visibleCells])
@@ -88,10 +83,7 @@
         [self updateCell:cell usingCard:card animate:YES];
     }
     self.scoreLabel.text = [NSString stringWithFormat:@"Score: %d",self.game.score];
-   // [self removeMatchedcards];
 }
-
-
 
 - (IBAction)flipCard:(UITapGestureRecognizer *)gesture
 {
@@ -108,9 +100,6 @@
     }
     
 }
-
-
-
 
 -(NSString *)getDescription
 {
@@ -150,8 +139,7 @@
     [self updateUI];
     
     self.flipCount =0;
-  //  self.descLabel.text =@"New Cards";
-    
+     
 }
 
 
